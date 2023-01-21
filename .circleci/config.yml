@@ -335,7 +335,7 @@ jobs:
           command: |
             # your code here
             cd frontend
-            sudo npm install -g npm@latest
+            sudo npm install -g npm
             rm -rf node_modules
             npm install
             npm run build
@@ -371,7 +371,7 @@ jobs:
             npm i
             npm run build
             cd ..
-            cd .circle/ansible
+            cd .circleci/ansible
             mkdir files
             cd files
             tar -C backend -czvf artifact.tar.gz .
