@@ -321,8 +321,8 @@ jobs:
           name: Get backend url
           command: |
             # your code here
-            export BACKEND_IP=$(aws ec2 describe-instance \
-            --query 'Reservation[*].Instances[*].PublicIpAddress' \
+            export BACKEND_IP=$(aws ec2 describe-instances \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
             --filter Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7} \
             --output text
             )
@@ -335,7 +335,7 @@ jobs:
           command: |
             # your code here
             cd frontend
-            sudo npm install -g npm
+            sudo npm install -g npm@latest
             rm -rf node_modules
             npm install
             npm run build
@@ -368,14 +368,17 @@ jobs:
           command: |
             # your code here
             cd backend
+
             npm i
             npm run build
             cd ..
+
             cd .circleci/ansible
             mkdir files
             cd files
-            tar -C backend -czvf artifact.tar.gz .
+            tar -C ../../../backend -czvf artifact.tar.gz .
             cd ../
+
             echo "Contents  of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
